@@ -16,6 +16,23 @@ class AccountInvoiceRefund(models.TransientModel):
 
     description = fields.Char(default=_default_description)
 
+    @api.depends('date_invoice')
+    @api.one
+    def _get_refund_only(self):
+        # for correct of account.invoice.refund
+        # we need to override active_ids of crm.claim with account.invoice ids
+        # because previously this wizard was only called from account.invoice
+        context = self.env.context
+        invoice_ids = context.get('invoice_ids')
+        ctx = context.copy()
+        if context.get('active_model') == 'crm.claim' and invoice_ids:
+            ctx.update({
+                'active_id': invoice_ids[:1],
+                'active_ids': invoice_ids,
+            })
+        return super(
+            AccountInvoiceRefund, self.with_context(ctx))._get_refund_only()
+
     @api.multi
     def compute_refund(self, mode='refund'):
         self.ensure_one()
