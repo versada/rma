@@ -115,7 +115,7 @@
                         <field name="claim_origin" colspan="6"/>
                         <field name="claim_diagnosis" colspan="6"/>
                         <field name="priority" colspan="6"/>
-                        <field name="product_returned_quantity" invisible="1"/>
+                        <field name="product_returned_quantity"/>
                         <field name="unit_sale_price"/>
                         <field name="return_value"/>
                     </group>
